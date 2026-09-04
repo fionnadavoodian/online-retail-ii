@@ -23,6 +23,7 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 | `03_customer_analysis` | `customer_df.csv` | order-frequency distribution, repeat-vs-one-time comparison, top-customer rankings, country/time breakdowns | How are orders distributed across customers, do repeat buyers spend differently, who are the top customers, and how does behavior vary by country and over time? |
 | `04_cohort_analysis` | `customer_df.csv` | cohort retention table/rate, revenue-by-cohort heatmap | What share of each cohort stays active month over month, and does spend per transaction change as customers age within a cohort? |
 | `05_segmentation` | `customer_df.csv` | RFM table, tercile scores, `rfm_level` tiers, tier revenue concentration | Which customers are highest-value by Recency/Frequency/Monetary, and how concentrated is revenue across value tiers? |
+| `06_product_cooccurrence_and_cancellations` | `customer_df.csv` | Product family mapping, cancellation match classification (same-StockCode / same-family / no-match) | Does product co-occurrence (buying multiple colour/pattern variants together) explain the cancellation pattern, or is it a reorder/fulfillment issue, or unrelated? |
 
 ## Metrics Glossary
 
@@ -53,7 +54,7 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 | RFM Frequency | `05` | `customer_frequency` (col `Customer_frequency`) | Loaded from `orders_per_customer.csv` and renamed — same metric as Orders per Customer above, not recomputed |
 | RFM Monetary | `05` | `customer_monetary` (col `Customer_monetary`) | Loaded from `revenue_per_customer.csv` and renamed — same metric as Revenue per Customer above, not recomputed |
 | RFM Table | `05` | `rfm_table` | Recency + Frequency + Monetary merged, one row/customer |
-| RFM Tercile Scores | `05` | `recency_quartile`, `frequency_quartile`, `monetary_quartile` (cols on `data_q`) | Named "quartile" but actually 3 buckets (`q=3`), not 4 |
+| RFM Tercile Scores | `05` | `recency_tercile`, `frequency_tercile`, `monetary_tercile` (cols on `data_q`) | q=3 buckets |
 | RFM Score | `05` | `rfm_score` | Sum of the three tercile scores (range 3–9) |
 | RFM Segment String | `05` | `rfm_segment` | Concatenated tercile scores, e.g. `"333"` |
 | RFM Tier | `05` | `rfm_level` | Top / Middle / Low, from `rfm_score` |
@@ -68,7 +69,14 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 
 ## Findings
 
-_TBD — to be filled in as the analysis progresses._
+Full write-up with charts: [reports/final_report.md](reports/final_report.md)
+
+- **Data quality:** the raw export needed real cleanup before it could support analysis — 5,268 duplicate rows, 3 bad-debt invoices, and 1,336 internal write-offs removed; a further 1,174 Price=0 rows split into 1,134 dropped (no Customer ID) and 40 kept-but-flagged (`is_zero_value`).
+- **Revenue:** Net Sales of £9,737,087 after an 8.41% return rate on £10,631,067 Gross Sales. AOV is £532.54. 65.58% of identified customers (2,845 of 4,338) are repeat buyers.
+- **Purchase patterns:** repeat customers average £2,908 in revenue vs. £411 for one-time buyers (~7x gap); the top 10 customers alone account for ~17% of total non-cancelled revenue. The business is 88.8% UK by transaction volume.
+- **Cohort retention:** retention falls from 100% at acquisition to roughly 15–25% by month 1, then stabilizes in a 20–40% band for later months. Revenue per line item stays flat (~£5–16.50) across every cohort and period, regardless of how retention moves.
+- **RFM segmentation:** the Top tier (1,803 customers, 41.6%) generates 84.6% of revenue; Middle (1,909 customers, 44.0%) generates 14.0%; Low (626 customers, 14.4%) generates 1.4%.
+- **Product co-occurrence & cancellations:** the hypothesis that cancellations reflect customers sampling multiple product variants and keeping one is **not supported** — same-family matches account for just 0.2% of cancelled invoices. Instead, 47.0% look like same-item reorders/corrections and 52.8% have no related order at all.
 
 ## How to Reproduce
 
