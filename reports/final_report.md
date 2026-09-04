@@ -54,6 +54,29 @@ The business is overwhelmingly UK-based — **88.8% of transaction rows are from
 
 ![Revenue over time](figures/revenue_over_time.png)
 
+### Repeat Rate vs. AOV by Country
+
+After excluding countries with fewer than 20 customers as unreliable, only 6 of 37 countries qualify: United Kingdom, Germany, France, Spain, Belgium, and Switzerland.
+
+| Country | Customers | Repeat Rate | AOV |
+|---|---|---|---|
+| Belgium | 24 | 75.0% | £420.37 |
+| Switzerland | 20 | 75.0% | £1,106.74 |
+| Germany | 94 | 72.3% | £500.39 |
+| France | 87 | 67.8% | £537.15 |
+| United Kingdom | 3,920 | 65.6% | £437.57 |
+| Spain | 28 | 64.3% | £683.98 |
+
+![AOV vs Repeat Rate by country](figures/aov_vs_repeat_rate_scatter.png)
+
+![Total customers and repeat rate by country](figures/repeat_rate_by_country.png)
+
+**What this answers:** the friction hypothesis doesn't hold. If friction (shipping cost, delivery time, no local payment option) were suppressing international demand, the expectation would be high AOV paired with a much lower repeat rate than the UK's 65.6% — customers spending well once, then not coming back because something about the experience discouraged them. That's not what's here. Every reliable international country has a repeat rate at or above the UK's, not below it — Switzerland is both the highest AOV (£1,106.74, more than double the UK's) and the highest repeat rate (75.0%) in this set. Germany and France also beat the UK's AOV and repeat rate simultaneously.
+
+So the real answer is closer to a pure demand/reach problem, not friction. The customers who do buy internationally aren't struggling to come back — if anything they're more loyal and spend more per order than UK customers. International customers are ~9.7% of the customer base but generate ~18.0% of revenue — nearly double their proportional share. That gap isn't explained by a broken repeat experience; it's explained by there simply being far fewer international customers reaching the store in the first place (94 in Germany vs. 3,920 in the UK — a scale gap, not a satisfaction gap).
+
+The business action that follows is different from what the friction hypothesis would have suggested: this doesn't point to "fix shipping/checkout friction," it points to "the demand that exists internationally converts well — the constraint is customer acquisition/reach, not retention." That's a marketing/reach lever, not an operations one.
+
 ## 5. Cohort Retention
 
 Across all cohorts, retention drops sharply after the first month — customers fall from 100% (their acquisition month, by definition) to roughly 15–25% by month 1, meaning most one-time buyers don't return the following month. Past that initial cliff, though, retention doesn't keep decaying: it stabilizes in a fairly flat 20–40% band for most subsequent months, suggesting that customers who do come back once tend to keep coming back at a steady rate rather than churning further.
