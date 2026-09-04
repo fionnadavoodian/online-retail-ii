@@ -14,6 +14,8 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 
 ## Notebook Map
 
+**Execution order matters.** `03` loads `orders_per_customer.csv` and `05` loads both `orders_per_customer.csv` and `revenue_per_customer.csv` — files produced by `02` and `03` respectively, not recomputed. Run notebooks in numeric order (`01` → `02` → `03` → `04` → `05`); `03` and `05` will fail with a missing-file error if run out of order. `04` has no such dependency — it only needs `01`'s output.
+
 | Notebook | Input | Produces | Answers |
 |---|---|---|---|
 | `01_data_cleaning` | `data/raw/online_retail_II.csv` | `revenue_df.csv`, `customer_df.csv` (cleaned, flagged, with `line_revenue`) | — (cleaning notebook; no analytical question) |
@@ -35,11 +37,11 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 | Return Rate | `02` | `return_rate` | \|Returns\| / Gross Sales × 100 |
 | AOV | `02` | `aov` | Gross Sales ÷ distinct non-cancelled invoices |
 | Customer-Attributed Gross Sales | `02` | `customer_gross_sales` | Gross Sales restricted to known Customer ID |
-| Orders per Customer | `02` | `orders_per_customer` | Series; **recomputed independently in `03`** as a DataFrame (`Number_of_Orders` column) — same metric, two implementations |
+| Orders per Customer | `02` | `orders_per_customer` | Saved to `orders_per_customer.csv`; loaded (not recomputed) in `03` and `05` |
 | Repeat Customer flag | `02` | `is_repeat_customer` | Boolean Series; **recomputed in `03`** as a column, merged explicitly on Customer ID |
 | Repeat Purchase Rate | `02` | `repeat_purchase_rate` | % of customers with >1 order |
 | Cohort Month | `02` | `cohort_month` | First non-cancelled purchase month per customer; **same concept recomputed in `04`** as `FirstPurchaseMonth` via a different (heavier) implementation |
-| Revenue per Customer | `03` | `revenue_per_customer` | First true per-customer revenue table; **recomputed in `05`** as `customer_monetary` |
+| Revenue per Customer | `03` | `revenue_per_customer` | First true per-customer revenue table. Saved to `revenue_per_customer.csv`; loaded (not recomputed) in `05` |
 | Top Customers by Revenue | `03` | `top_customers` | |
 | Top Customers by Order Volume | `03` | `number_orders` | |
 | First Purchase Month (cohort) | `04` | `customer_df['FirstPurchaseMonth']` | See Cohort Month above — same thing, different notebook |
@@ -48,8 +50,8 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 | Cohort Retention Rate | `04` | `normalized_cohort_df` | `cohort_df` normalized to each cohort's period-0 size |
 | Median Revenue by Cohort | `04` | `average_sales` | Cohort × period → median `line_revenue` |
 | RFM Recency | `05` | `customer_recency` (col `Customer_recency`) | Days since last non-cancelled purchase |
-| RFM Frequency | `05` | `customer_frequency` (col `Customer_frequency`) | Same metric as `orders_per_customer` above, third implementation |
-| RFM Monetary | `05` | `customer_monetary` (col `Customer_monetary`) | Same metric as `revenue_per_customer` above |
+| RFM Frequency | `05` | `customer_frequency` (col `Customer_frequency`) | Loaded from `orders_per_customer.csv` and renamed — same metric as Orders per Customer above, not recomputed |
+| RFM Monetary | `05` | `customer_monetary` (col `Customer_monetary`) | Loaded from `revenue_per_customer.csv` and renamed — same metric as Revenue per Customer above, not recomputed |
 | RFM Table | `05` | `rfm_table` | Recency + Frequency + Monetary merged, one row/customer |
 | RFM Tercile Scores | `05` | `recency_quartile`, `frequency_quartile`, `monetary_quartile` (cols on `data_q`) | Named "quartile" but actually 3 buckets (`q=3`), not 4 |
 | RFM Score | `05` | `rfm_score` | Sum of the three tercile scores (range 3–9) |
