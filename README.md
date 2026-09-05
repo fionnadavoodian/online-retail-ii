@@ -25,41 +25,6 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 | `05_segmentation` | `customer_df.csv` | RFM table, tercile scores, `rfm_level` tiers, tier revenue concentration | Which customers are highest-value by Recency/Frequency/Monetary, and how concentrated is revenue across value tiers? |
 | `06_product_cooccurrence_and_cancellations` | `customer_df.csv` | Product family mapping, cancellation match classification (same-StockCode / same-family / no-match) | Does product co-occurrence (buying multiple colour/pattern variants together) explain the cancellation pattern, or is it a reorder/fulfillment issue, or unrelated? |
 
-## Metrics Glossary
-
-| Metric | First Defined In | Variable Name | Notes |
-|---|---|---|---|
-| Cancelled flag | `01` | `is_cancelled` | `Invoice` starts with 'C' |
-| Zero-value flag | `01` | `is_zero_value` | Price=0 & Qty>0, real customer orders only |
-| Line revenue | `01` | `line_revenue` | `Quantity × Price`, carried into both processed CSVs |
-| Gross Sales | `02` | `revenue_gross_sales` | Non-cancelled `line_revenue`, full transaction set |
-| Returns | `02` | `returns` | Cancelled `line_revenue` (negative) |
-| Net Sales | `02` | `net_sale` | Gross + Returns |
-| Return Rate | `02` | `return_rate` | \|Returns\| / Gross Sales × 100 |
-| AOV | `02` | `aov` | Gross Sales ÷ distinct non-cancelled invoices |
-| Customer-Attributed Gross Sales | `02` | `customer_gross_sales` | Gross Sales restricted to known Customer ID |
-| Orders per Customer | `02` | `orders_per_customer` | Saved to `orders_per_customer.csv`; loaded (not recomputed) in `03` and `05` |
-| Repeat Customer flag | `02` | `is_repeat_customer` | Boolean Series; **recomputed in `03`** as a column, merged explicitly on Customer ID |
-| Repeat Purchase Rate | `02` | `repeat_purchase_rate` | % of customers with >1 order |
-| Cohort Month | `02` | `cohort_month` | First non-cancelled purchase month per customer; **same concept recomputed in `04`** as `FirstPurchaseMonth` via a different (heavier) implementation |
-| Revenue per Customer | `03` | `revenue_per_customer` | First true per-customer revenue table. Saved to `revenue_per_customer.csv`; loaded (not recomputed) in `05` |
-| Top Customers by Revenue | `03` | `top_customers` | |
-| Top Customers by Order Volume | `03` | `number_orders` | |
-| First Purchase Month (cohort) | `04` | `customer_df['FirstPurchaseMonth']` | See Cohort Month above — same thing, different notebook |
-| Periods Since Acquisition | `04` | `customer_df['PeriodSinceAcquisition']` | Months between `InvoiceMonth` and `FirstPurchaseMonth` |
-| Cohort Retention Counts | `04` | `cohort_df` | Pivot: cohort × period → active customer count |
-| Cohort Retention Rate | `04` | `normalized_cohort_df` | `cohort_df` normalized to each cohort's period-0 size |
-| Median Revenue by Cohort | `04` | `average_sales` | Cohort × period → median `line_revenue` |
-| RFM Recency | `05` | `customer_recency` (col `Customer_recency`) | Days since last non-cancelled purchase |
-| RFM Frequency | `05` | `customer_frequency` (col `Customer_frequency`) | Loaded from `orders_per_customer.csv` and renamed — same metric as Orders per Customer above, not recomputed |
-| RFM Monetary | `05` | `customer_monetary` (col `Customer_monetary`) | Loaded from `revenue_per_customer.csv` and renamed — same metric as Revenue per Customer above, not recomputed |
-| RFM Table | `05` | `rfm_table` | Recency + Frequency + Monetary merged, one row/customer |
-| RFM Tercile Scores | `05` | `recency_tercile`, `frequency_tercile`, `monetary_tercile` (cols on `data_q`) | q=3 buckets |
-| RFM Score | `05` | `rfm_score` | Sum of the three tercile scores (range 3–9) |
-| RFM Segment String | `05` | `rfm_segment` | Concatenated tercile scores, e.g. `"333"` |
-| RFM Tier | `05` | `rfm_level` | Top / Middle / Low, from `rfm_score` |
-| Tier Revenue Concentration | `05` | `tier_summary` | % of customers vs. % of revenue per tier |
-
 ## Tech Stack
 
 - Python
@@ -71,14 +36,22 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 
 Full write-up with charts: [reports/final_report.md](reports/final_report.md)
 
-- **Data quality:** the raw export needed real cleanup before it could support analysis — 5,268 duplicate rows, 3 bad-debt invoices, and 1,336 internal write-offs removed; a further 1,174 Price=0 rows split into 1,134 dropped (no Customer ID) and 40 kept-but-flagged (`is_zero_value`).
-- **Revenue:** Net Sales of £9,737,087 after an 8.41% return rate on £10,631,067 Gross Sales. AOV is £532.54. 65.58% of identified customers (2,845 of 4,338) are repeat buyers.
-- **Purchase patterns:** repeat customers average £2,908 in revenue vs. £411 for one-time buyers (~7x gap); the top 10 customers alone account for ~17% of total non-cancelled revenue. The business is 88.8% UK by transaction volume.
-- **International customers, not friction:** international customers are ~9.7% of the customer base but generate ~18.0% of revenue. Every reliable international country matches or beats the UK on both AOV and repeat rate — international demand isn't being suppressed by friction, it's a reach/acquisition constraint, not a retention one.
-- **Cohort retention:** retention falls from 100% at acquisition to roughly 15–25% by month 1, then stabilizes in a 20–40% band for later months. Revenue per line item stays flat (~£5–16.50) across every cohort and period, regardless of how retention moves.
 - **RFM segmentation:** the Top tier (1,803 customers, 41.6%) generates 84.6% of revenue; Middle (1,909 customers, 44.0%) generates 14.0%; Low (626 customers, 14.4%) generates 1.4%.
-- **Product co-occurrence & cancellations:** the hypothesis that cancellations reflect customers sampling multiple product variants and keeping one is **not supported** — same-family matches account for just 0.2% of cancelled invoices. Instead, 47.0% look like same-item reorders/corrections and 52.8% have no related order at all.
+- **International customers, not friction:** international customers are ~9.7% of the customer base but generate ~18.0% of revenue. Every reliable international country matches or beats the UK on both AOV and repeat rate — international demand isn't being suppressed by friction, it's a reach/acquisition constraint, not a retention one.
+- **Product co-occurrence & cancellations:** the hypothesis that cancellations reflect customers sampling multiple product variants and keeping one is **not supported** — same-family matches account for just 0.2% of cancelled invoices.
 
 ## How to Reproduce
 
-_TBD — setup and run instructions to be added once the analysis pipeline is finalized._
+1. Clone the repo:
+   ```
+   git clone https://github.com/fionnadavoodian/online-retail-ii.git
+   cd online-retail-ii
+   ```
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Run the notebooks in order, `01` through `06` — see the [Notebook Map](#notebook-map)'s execution-order note above; `03` and `05` depend on files produced by earlier notebooks and will fail with a missing-file error if run out of order.
+4. Outputs land in:
+   - `data/processed/` — cleaned datasets and intermediate per-customer CSVs
+   - `reports/figures/` — chart images referenced by `reports/final_report.md`

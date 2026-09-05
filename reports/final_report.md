@@ -36,6 +36,26 @@ At the customer level, 65.58% of identified customers are repeat buyers (2,845 o
 
 Guest/unattributed transactions matter: customer-attributed Gross Sales (£8,887,227) is only ~84% of total Gross Sales — roughly a sixth of revenue comes from orders with no Customer ID, real money that customer-level KPIs (repeat rate, cohort, RFM) structurally can't see.
 
+**Caveat on the 8.41% return rate:** that single figure is an annual average that masks real monthly variation.
+
+| Month | Orders | Return Rate |
+|---|---|---|
+| 2010-12 | 1,559 | 9.10% |
+| 2011-01 | 1,086 | 19.04% |
+| 2011-02 | 1,101 | 4.88% |
+| 2011-03 | 1,454 | 4.78% |
+| 2011-04 | 1,246 | 8.31% |
+| 2011-05 | 1,681 | 6.14% |
+| 2011-06 | 1,533 | 9.28% |
+| 2011-07 | 1,475 | 5.28% |
+| 2011-08 | 1,361 | 7.28% |
+| 2011-09 | 1,838 | 3.68% |
+| 2011-10 | 2,040 | 7.11% |
+| 2011-11 | 2,770 | 3.17% |
+| 2011-12 | 819 | 32.16% |
+
+December 2011 only covers Dec 1–9 (819 orders vs. a normal ~1,000–2,770/month range) — it's excluded from any trend conclusion as a small-sample artifact, not a real spike. January 2011, a full month with 1,086 orders (in the normal range), had a return rate of 19.04% — more than double the next-highest non-December month (June 2011 at 9.28%) — a genuine outlier worth investigating (e.g. post-holiday returns).
+
 ## 4. Purchase Patterns
 
 Order counts are heavily skewed: most customers place just 1 order, with the distribution dropping off sharply and a long tail of high-frequency buyers (up to 209 orders from a single customer) — the capped-at-10+ histogram below undersells how concentrated this really is.
@@ -53,6 +73,18 @@ The business is overwhelmingly UK-based — **88.8% of transaction rows are from
 ![Gross Sales by country](figures/gross_sales_by_country.png)
 
 ![Revenue over time](figures/revenue_over_time.png)
+
+### Top Customers: Revenue vs. Order Volume Overlap
+
+Only 3 of the top 10 customers by revenue also appear in the top 10 by order volume — Customers **14646, 14911, and 16029**. The other 7 in each list are distinct customers, suggesting high-value customers split into two different types: big-basket/infrequent buyers (high revenue per order, few orders) and frequent/moderate-basket buyers (many orders, lower revenue each). They likely need different retention approaches — white-glove/VIP treatment for the former, frequency or loyalty incentives for the latter — rather than one blanket "top customer" program.
+
+### Orders Ramp Up Toward November
+
+![Orders over time](figures/orders_over_time.png)
+
+Order volume climbs steadily through the back half of the year — 1,838 in September, 2,040 in October, 2,770 in November (the year's peak) — consistent with demand building ahead of the holiday season. This points to a staffing/inventory planning implication: scale up through Q4, peaking around November.
+
+The apparent drop to 819 orders in December 2011 (the last point on the chart above) is **not a real decline** — it's a partial-month artifact. The dataset only covers December 1–9, so that final point undercounts by roughly three weeks of data and should not be read as a post-November falloff.
 
 ### Repeat Rate vs. AOV by Country
 
