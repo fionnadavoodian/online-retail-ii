@@ -13,7 +13,7 @@ A small group of existing customers drives almost all the revenue, and the clear
 - **The second purchase is the sticking point.** Of customers acquired in a given month, only about 15–25% buy again the following month. After that, the ones who stick around keep buying at a steady rate — so the hard part is getting people from their first order to their second.
 - **Overseas customers punch above their weight.** They're about 10% of the customer base but nearly 20% of revenue. In every country with enough data to judge (Germany, France, Switzerland, Belgium, Spain), they buy at least as often as UK customers and spend as much or more per order.
 - **Demand builds toward November.** Order volume climbs steadily through autumn and peaks in November, ahead of the holiday season. (The data stops on 9 December, so the apparent December drop is just missing days, not a real decline.)
-- **Returns are steady except January.** About 8% of order value is returned across the year — normal for retail — but January runs more than double that, likely post-holiday returns.
+- **Returns spike in January.** About 8% of order value is returned across the year; January runs more than double that (19%). The cause isn't confirmed in the analysis — worth a closer look.
 
 ## What this means for marketing
 
