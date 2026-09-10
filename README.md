@@ -2,19 +2,19 @@
 
 ## Overview
 
-This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset/502/online+retail+ii) dataset, a set of transactional records from a UK-based online retailer covering 2009–2011. The goal is to move from raw, messy transactional data to a clean analytical dataset and derive actionable insights around revenue, customer retention, and customer segmentation — the kind of end-to-end workflow a data/business analyst would run for a retail stakeholder.
+This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset/502/online+retail+ii) dataset — transactional records from a UK-based online retailer. It uses the December 2010 – December 2011 file (~542k line items). The goal is to move from raw, messy transactional data to a clean analytical dataset and derive actionable insights around revenue, customer retention, and customer segmentation — the kind of end-to-end workflow a data/business analyst would run for a retail stakeholder.
 
 ## Business Questions
 
 - **Net sales**: What is net revenue after accounting for returns and cancelled orders, and how does it trend over time?
-
 - **Repeat purchase behavior**: What share of customers make more than one purchase, and how does that compare to one-time buyers?
 - **Cohort retention**: How well does the business retain customers over time when grouped into monthly acquisition cohorts?
 - **Segmentation**: What distinct customer segments emerge (e.g. via RFM analysis), and how do they differ in value and behavior?
+- **Cancellations**: Do customers cancel because they bought multiple product variants and kept one, or is it something else (reorders, unrelated returns)?
 
 ## Notebook Map
 
-**Execution order matters.** `03` loads `orders_per_customer.csv` and `05` loads both `orders_per_customer.csv` and `revenue_per_customer.csv` — files produced by `02` and `03` respectively, not recomputed. Run notebooks in numeric order (`01` → `02` → `03` → `04` → `05`); `03` and `05` will fail with a missing-file error if run out of order. `04` has no such dependency — it only needs `01`'s output.
+**Execution order matters.** `03` loads `orders_per_customer.csv` and `05` loads both `orders_per_customer.csv` and `revenue_per_customer.csv` — files produced by `02` and `03` respectively, not recomputed. Run notebooks in numeric order (`01` → `02` → `03` → `04` → `05` → `06`); `03` and `05` will fail with a missing-file error if run out of order. `04` and `06` have no such dependency — they only need `01`'s output.
 
 | Notebook                                    | Input                               | Produces                                                                                                    | Answers                                                                                                                                                             |
 | ------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -34,7 +34,7 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 
 ## Findings
 
-Full write-up with charts: [reports/final_report.md](reports/final_report.md)
+Reports: [executive_summary.md](reports/executive_summary.md) (plain-English, non-technical) · [final_report.md](reports/final_report.md) (full write-up with charts and methods)
 
 - **RFM segmentation:** the Top tier (1,803 customers, 41.6%) generates 84.6% of revenue; Middle (1,909 customers, 44.0%) generates 14.0%; Low (626 customers, 14.4%) generates 1.4%.
 - **International customers, not friction:** international customers are ~9.7% of the customer base but generate ~18.0% of revenue. Every reliable international country matches or beats the UK on both AOV and repeat rate — international demand isn't being suppressed by friction, it's a reach/acquisition constraint, not a retention one.
@@ -51,7 +51,8 @@ Full write-up with charts: [reports/final_report.md](reports/final_report.md)
    ```
    pip install -r requirements.txt
    ```
-3. Run the notebooks in order, `01` through `06` — see the [Notebook Map](#notebook-map)'s execution-order note above; `03` and `05` depend on files produced by earlier notebooks and will fail with a missing-file error if run out of order.
-4. Outputs land in:
+3. Download the dataset (not tracked in the repo). Get the **Year 2010-2011** sheet of [Online Retail II](https://archive.ics.uci.edu/dataset/502/online+retail+ii) from the UCI Machine Learning Repository and save it as `data/raw/online_retail_II.csv`.
+4. Run the notebooks in order, `01` through `06` — see the [Notebook Map](#notebook-map)'s execution-order note above; `03` and `05` depend on files produced by earlier notebooks and will fail with a missing-file error if run out of order.
+5. Outputs land in:
    - `data/processed/` — cleaned datasets and intermediate per-customer CSVs
    - `reports/figures/` — chart images referenced by `reports/final_report.md`
