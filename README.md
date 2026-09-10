@@ -14,16 +14,16 @@ This project analyzes the [Online Retail II](https://archive.ics.uci.edu/dataset
 
 ## Notebook Map
 
-**Execution order matters.** `03` loads `orders_per_customer.csv` and `05` loads both `orders_per_customer.csv` and `revenue_per_customer.csv` — files produced by `02` and `03` respectively, not recomputed. Run notebooks in numeric order (`01` → `02` → `03` → `04` → `05` → `06`); `03` and `05` will fail with a missing-file error if run out of order. `04` and `06` have no such dependency — they only need `01`'s output.
+**Execution order matters.** Each notebook writes intermediate CSVs into `data/processed/` that later ones read (see the *Produces* / *Reads* columns). Run them in numeric order (`01` → `02` → `03` → `04` → `05` → `06`); `02`, `03`, and `05` will fail with a missing-file error if run before the notebook that produces their input. `04` and `06` only need `01`'s output.
 
-| Notebook                                    | Input                               | Produces                                                                                                    | Answers                                                                                                                                                             |
-| ------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `01_data_cleaning`                          | `data/raw/online_retail_II.csv`     | `revenue_df.csv`, `customer_df.csv` (cleaned, flagged, with `total_payment`)                                | — (cleaning notebook; no analytical question)                                                                                                                       |
-| `02_kpi_definition`                         | `revenue_df.csv`, `customer_df.csv` | Gross/Net Sales, Return Rate, AOV, Repeat Purchase Rate, Cohort Month                                       | What is net revenue after returns, and what share of customers are repeat buyers?                                                                                   |
-| `03_customer_analysis`                      | `customer_df.csv`                   | order-frequency distribution, repeat-vs-one-time comparison, top-customer rankings, country/time breakdowns | How are orders distributed across customers, do repeat buyers spend differently, who are the top customers, and how does behavior vary by country and over time?    |
-| `04_cohort_analysis`                        | `customer_df.csv`                   | cohort retention table/rate, revenue-by-cohort heatmap                                                      | What share of each cohort stays active month over month, and does spend per transaction change as customers age within a cohort?                                    |
-| `05_segmentation`                           | `customer_df.csv`                   | RFM table, tercile scores, `rfm_level` tiers, tier revenue concentration                                    | Which customers are highest-value by Recency/Frequency/Monetary, and how concentrated is revenue across value tiers?                                                |
-| `06_product_cooccurrence_and_cancellations` | `customer_df.csv`                   | Product family mapping, cancellation match classification (same-StockCode / same-family / no-match)         | Does product co-occurrence (buying multiple colour/pattern variants together) explain the cancellation pattern, or is it a reorder/fulfillment issue, or unrelated? |
+| Notebook | Reads | Produces (in `data/processed/`) | Answers |
+|---|---|---|---|
+| `01_data_cleaning` | `data/raw/online_retail_II.csv` | `revenue_df.csv`, `customer_df.csv` (cleaned, flagged, with `total_payment`) | — (cleaning notebook; no analytical question) |
+| `02_kpi_definition` | `revenue_df.csv`, `customer_df.csv` | `orders_per_customer.csv`; Gross/Net Sales, Return Rate, AOV, Repeat Purchase Rate, Cohort Month | What is net revenue after returns, and what share of customers are repeat buyers? |
+| `03_customer_analysis` | `customer_df.csv`, `orders_per_customer.csv` | `revenue_per_customer.csv`; order-frequency distribution, repeat-vs-one-time comparison, top-customer rankings, country/time breakdowns | How are orders distributed across customers, do repeat buyers spend differently, who are the top customers, and how does behavior vary by country and over time? |
+| `04_cohort_analysis` | `customer_df.csv` | cohort retention table/rate, revenue-by-cohort heatmap | What share of each cohort stays active month over month, and does spend per transaction change as customers age within a cohort? |
+| `05_segmentation` | `customer_df.csv`, `orders_per_customer.csv`, `revenue_per_customer.csv` | RFM table, tercile scores, `rfm_level` tiers, tier revenue concentration | Which customers are highest-value by Recency/Frequency/Monetary, and how concentrated is revenue across value tiers? |
+| `06_product_cooccurrence_and_cancellations` | `customer_df.csv` | Product family mapping, cancellation match classification (same-StockCode / same-family / no-match) | Does product co-occurrence (buying multiple colour/pattern variants together) explain the cancellation pattern, or is it a reorder/fulfillment issue, or unrelated? |
 
 ## Tech Stack
 
@@ -52,7 +52,7 @@ Reports: [executive_summary.md](reports/executive_summary.md) (plain-English, no
    pip install -r requirements.txt
    ```
 3. Download the dataset (not tracked in the repo). Get the **Year 2010-2011** sheet of [Online Retail II](https://archive.ics.uci.edu/dataset/502/online+retail+ii) from the UCI Machine Learning Repository and save it as `data/raw/online_retail_II.csv`.
-4. Run the notebooks in order, `01` through `06` — see the [Notebook Map](#notebook-map)'s execution-order note above; `03` and `05` depend on files produced by earlier notebooks and will fail with a missing-file error if run out of order.
+4. Run the notebooks in order, `01` through `06` — see the [Notebook Map](#notebook-map)'s execution-order note above. `02`, `03`, and `05` read intermediate CSVs written by earlier notebooks and will fail with a missing-file error if run out of order.
 5. Outputs land in:
-   - `data/processed/` — cleaned datasets and intermediate per-customer CSVs
+   - `data/processed/` — cleaned datasets (`revenue_df.csv`, `customer_df.csv`) and intermediate per-customer CSVs (`orders_per_customer.csv`, `revenue_per_customer.csv`)
    - `reports/figures/` — chart images referenced by `reports/final_report.md`
