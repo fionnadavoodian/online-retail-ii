@@ -82,9 +82,9 @@ Only 3 of the top 10 customers by revenue also appear in the top 10 by order vol
 
 ![Orders over time](figures/orders_over_time.png)
 
-Order volume climbs steadily through the back half of the year — 1,838 in September, 2,040 in October, 2,770 in November (the year's peak) — consistent with demand building ahead of the holiday season. This points to a staffing/inventory planning implication: scale up through Q4, peaking around November.
+Customer-attributed order volume climbs steadily through the back half of the year — 1,755 in September, 1,929 in October, 2,657 in November (the year's peak) — consistent with demand building ahead of the holiday season. This points to a staffing/inventory planning implication: scale up through Q4, peaking around November. (Counting all invoices including guest checkouts, the same shape holds, running roughly 5–15% higher each month.)
 
-The apparent drop to 819 orders in December 2011 (the last point on the chart above) is **not a real decline** — it's a partial-month artifact. The dataset only covers December 1–9, so that final point undercounts by roughly three weeks of data and should not be read as a post-November falloff.
+The apparent drop to 778 orders in December 2011 (the last point on the chart above) is **not a real decline** — it's a partial-month artifact. The dataset only covers December 1–9, so that final point undercounts by roughly three weeks of data and should not be read as a post-November falloff.
 
 ### Repeat Rate vs. AOV by Country
 
